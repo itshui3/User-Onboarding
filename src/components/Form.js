@@ -44,7 +44,11 @@ const FormikInputForm = withFormik({
       .required("Password required")
   }),
 
-  handleSubmit(values) {
+  handleSubmit(values, {setErrors}) {
+
+    if (values.email === "waffle@syrup.com") {
+      setErrors({email: "Stretch goal hates waffles"});
+    } 
 
     axios
       .post("https://reqres.in/api/users/", values)
