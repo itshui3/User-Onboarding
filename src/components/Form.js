@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import { withFormik, Form, Field } from 'formik';
@@ -6,7 +6,13 @@ import * as Yup from 'yup';
 
 
 
-const InputForm = ({values, errors, touched }) => {
+const InputForm = ({values, errors, touched, setUsers, isSubmitting, users, status }) => {
+
+  useEffect(() => {
+    console.log(status);
+    status && setUsers(users => [...users, status])
+    console.log(users);
+  }, [status])
 
   return(
     <Form>
@@ -18,7 +24,7 @@ const InputForm = ({values, errors, touched }) => {
       {touched.password && errors.password && (<p>{errors.password}</p>)}
       <Field type="checkbox" name="tos" checked={values.tos} />
 
-      <button>Submit!</button>
+      <button type="submit" disabled={isSubmitting}>Submit!</button>
     </Form>
   )
 }
@@ -36,29 +42,36 @@ const FormikInputForm = withFormik({
 
   validationSchema: Yup.object().shape({
     name: Yup.string("Name needs to be a string")
-      .min(6, "Name needs to be at least 6 characters")
-      .required("Name required"),
+      .max(16, "Your name is too long, change it")
+      .required("Your name is required"),
     email: Yup.string()
       .required("Email required"),
     password: Yup.string()
       .required("Password required")
   }),
 
-  handleSubmit(values, {setErrors}) {
+  handleSubmit(values, {setErrors, setStatus, resetForm, setSubmitting}) {
+// takes in values generated after validation along with formikbag
+// generates information for me to save to state as res
 
     if (values.email === "waffle@syrup.com") {
       setErrors({email: "Stretch goal hates waffles"});
-    } 
-
-    axios
+    } else {
+      axios
       .post("https://reqres.in/api/users/", values)
       .then(res => {
 
         console.log(res);
+        setStatus(res.data);
+        resetForm();
+        setSubmitting(false);
       })
       .catch(err => {
         console.log(err.response);
+        setSubmitting(false);
       });
+
+    }
   }
 })(InputForm);
 
