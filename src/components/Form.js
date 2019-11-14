@@ -16,7 +16,7 @@ const InputForm = ({values, errors, touched }) => {
       {touched.email && errors.email && (<p>{errors.email}</p>)}
       <Field type="text" name="password" placeholder="password" />
       {touched.password && errors.password && (<p>{errors.password}</p>)}
-      <Field type="checkbox" name="tos" value={values.tos} />
+      <Field type="checkbox" name="tos" checked={values.tos} />
 
       <button>Submit!</button>
     </Form>
@@ -44,12 +44,12 @@ const FormikInputForm = withFormik({
       .required("Password required")
   }),
 
-  handleSubmit(values, { setStatus }) {
+  handleSubmit(values) {
 
     axios
       .post("https://reqres.in/api/users/", values)
       .then(res => {
-        setStatus(res.data);
+
         console.log(res);
       })
       .catch(err => {
