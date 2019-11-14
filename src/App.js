@@ -5,7 +5,7 @@ import './App.css';
 
 import {Jumbotron} from 'reactstrap';
 
-import MyForm from './components/Form';
+import InputForm from './components/Form';
 
 const FlexJumbotron = styled(Jumbotron)`
   display: flex;
@@ -17,9 +17,9 @@ function App() {
   return (
     <FlexJumbotron>
       <h1>This is a form</h1>
-      <MyForm>
+      <InputForm>
 
-      </MyForm>
+      </InputForm>
     </FlexJumbotron>
   );
 }
